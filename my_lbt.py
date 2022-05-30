@@ -1,6 +1,5 @@
 from cued_sf2_lab.lbt import pot_ii
 from cued_sf2_lab.dct import dct_ii
-%matplotlib nbagg
 import warnings
 import inspect
 import matplotlib.pyplot as plt
@@ -12,7 +11,7 @@ from cued_sf2_lab.laplacian_pyramid import bpp
 from cued_sf2_lab.laplacian_pyramid import quantise
 from cued_sf2_lab.dct import regroup
 
-def do_the_lbt(X, N=8, s=1, quant=False, quant_step=0):
+def do_the_lbt(X, N=8, s=1, quant=False, quant_step=20, rise1=1):
     C = dct_ii(N)  
     Pf, Pr = pot_ii(N, s)
     t = np.s_[N//2:-N//2]  # N is the DCT size, I is the image size
@@ -21,7 +20,7 @@ def do_the_lbt(X, N=8, s=1, quant=False, quant_step=0):
     Xp[:,t] = colxfm(Xp[:,t].T, Pf).T
     Y = colxfm(colxfm(Xp, C).T, C).T
     if quant:
-        Y = quantise(Y, quant_step)
+        Y = quantise(Y, quant_step, rise1)
     Z = colxfm(colxfm(Y.T, C.T).T, C.T)
     Zp = Z.copy()  #copy the non-transformed edges directly from Z
     Zp[:,t] = colxfm(Zp[:,t].T, Pr.T).T
